@@ -4,14 +4,14 @@ var Koa = require('koa')
 var path = require('path')
 var util = require('./libs/util')
 var wechat = require('./wechat/g')
-var wechat_file = path.join(__dirname, './config/wechat.text')
+var wechat_file = path.join(__dirname, './config/wechat.txt')
 var config = {
 	wechat: {
 		appID: 'wxaca1a7e49ae599cf',
-		appSecret: '74ae9f397e91f99de9c03f7d119110c5',
+		appSecret: 'a41525310cb860dc814b7d7c3777e75f',
 		token: 'thisistoken',
 		getAccessToken: function() {
-			return util.readFileAsync(wechat_file)
+			return util.readFileAsync(wechat_file,'utf-8')
 		},
 		saveAccessToken: function(data) {
 			data = JSON.stringify(data)
