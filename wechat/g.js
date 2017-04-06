@@ -6,11 +6,10 @@ var getRawBody = require('raw-body')
 var util = require('./util')
 
 module.exports = function (options) {
-	var that = this
 	var wechat = new Wechat(options)
 	return function *(next) {
 		// console.log(this.query)
-
+		var that = this
 		var token = options.token
 		var signature = this.query.signature
 		var nonce = this.query.nonce
@@ -18,6 +17,7 @@ module.exports = function (options) {
 		var echostr = this.query.echostr
 
 		var str = [token, timestamp, nonce].sort().join('')
+		console.log(this)
 		var sha = sha1(str)
 		if (this.method === 'GET') {
 			if (sha === signature) {
@@ -36,9 +36,10 @@ module.exports = function (options) {
 				limit: '1mb',
 				encoding: this.charset
 			})
-
+			console.log(data)
 			var content = yield util.parseXMLAsync(data)
 			var message = util.formatMessage(content.xml)
+			console.log(message)
 
 			if (message.MsgType === 'event') {
 				if (message.Event === 'subscribe') {
