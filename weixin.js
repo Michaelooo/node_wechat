@@ -1,8 +1,8 @@
 //用于处理自动回复信息的处理逻辑
 'use strict'
 exports.reply = function* (next) {
-	console.log(this + " " + next)
 	var message = this.weixin
+	console.log(message)
 	if (message.MsgType === 'event') {
 		if (message.Event === 'subscribe') {
 			if (message.EventKey) {

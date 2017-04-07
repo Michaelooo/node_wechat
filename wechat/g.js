@@ -39,7 +39,7 @@ module.exports = function (options, handler) {
 			var message = util.formatMessage(content.xml)
 
 			this.weixin = message
-			console.log(handler)
+			// console.log(handler)
 			yield handler.call(this, next)
 
 			wechat.reply.call(this)

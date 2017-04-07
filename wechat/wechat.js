@@ -39,6 +39,7 @@ function Wechat (options) {
 }
 
 Wechat.prototype.reply = function() {
+	console.log(this)
 	var content = this.body
 	var message = this.weixin
 

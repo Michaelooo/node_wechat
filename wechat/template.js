@@ -9,7 +9,7 @@ var tpl = heredoc(function() {/*
 	<FromUserName><![CDATA[<%= fromUserName %>]]></FromUserName>
 	<CreateTime><%= createTime %></CreateTime>
 	<MsgType><![CDATA[<%= msgType %>]]></MsgType>
-	<% if (msgType === 'Text') {%>
+	<% if (msgType === 'Text') { %>
 		<Content><![CDATA[<%= content %>]]></Content>	
 	<% } else if (msgType === 'image') { %>
 		<Image>
@@ -25,7 +25,7 @@ var tpl = heredoc(function() {/*
 		<Title><![CDATA[<%= content.title %>]]></Title>
 		<Description><![CDATA[<%= content.description %>]]></Description>
 		</Video>
-	<% } else if (msgType === 'music') %>
+	<% } else if (msgType === 'music') { %>
 		<Music>
 		<Title><![CDATA[<%= content.title %>]]></Title>
 		<Description><![CDATA[<%= content.description %>]]></Description>
@@ -48,7 +48,7 @@ var tpl = heredoc(function() {/*
 	<% } %>
 	</xml>
 */})
-console.log(ejs)
+// console.log(tpl)
 var compile  = ejs.compile(tpl)
 
 exports = module.exports = {
