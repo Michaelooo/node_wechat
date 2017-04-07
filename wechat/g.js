@@ -5,7 +5,7 @@ var Wechat = require('./wechat')
 var getRawBody = require('raw-body')
 var util = require('./util')
 
-module.exports = function (options) {
+module.exports = function (options, handler) {
 	var wechat = new Wechat(options)
 	return function *(next) {
 		// console.log(this.query)
@@ -17,7 +17,6 @@ module.exports = function (options) {
 		var echostr = this.query.echostr
 
 		var str = [token, timestamp, nonce].sort().join('')
-		console.log(this)
 		var sha = sha1(str)
 		if (this.method === 'GET') {
 			if (sha === signature) {
@@ -36,26 +35,25 @@ module.exports = function (options) {
 				limit: '1mb',
 				encoding: this.charset
 			})
-			console.log(data)
 			var content = yield util.parseXMLAsync(data)
 			var message = util.formatMessage(content.xml)
 			console.log(message)
 
-			if (message.MsgType === 'event') {
-				if (message.Event === 'subscribe') {
-					var now  = new Date().getTime()
-					that.status = 200
-					that.type = 'application/text'
-					that.body = '<xml>' + 
-						'<ToUserName><![CDATA['+ message.FromUserName +']]></ToUserName>' + 
-						'<FromUserName><![CDATA['+ message.ToUserName +']]></FromUserName>' + 
-						'<CreateTime>'+ now +'</CreateTime>' + 
-						'<MsgType><![CDATA[text]]></MsgType>' + 
-						'<Content><![CDATA[你好]]></Content>' + 
-						'</xml>'
-					return
-				}
-			}
+			this.weixin = message
+
+			yield handler.call(this, next)
+
+			wechat.reply.call(this)
+
+			// if (message.MsgType === 'event') {
+			// 	if (message.Event === 'subscribe') {
+			// 		var now  = new Date().getTime()
+			// 		that.status = 200
+			// 		that.type = 'application/text'
+			// 		that.body = xml
+			// 		return
+			// 	}
+			// }
 		}
 
 	}
