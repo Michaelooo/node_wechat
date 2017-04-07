@@ -3,11 +3,11 @@
 var ejs = require('ejs')
 var heredoc = require('heredoc')
 
-var tpl = heredoc(function(){/*
+var tpl = heredoc(function() {/*
 	<xml>
-	<ToUserName><![CDATA[<%= toUserName %> ]]></ToUserName>
-	<FromUserName><![CDATA[<%= fromUserName %> ]]></FromUserName>
-	<CreateTime> <%= createTime %> </CreateTime>
+	<ToUserName><![CDATA[<%= toUserName %>]]></ToUserName>
+	<FromUserName><![CDATA[<%= fromUserName %>]]></FromUserName>
+	<CreateTime><%= createTime %></CreateTime>
 	<MsgType><![CDATA[<%= msgType %>]]></MsgType>
 	<% if (msgType === 'Text') {%>
 		<Content><![CDATA[<%= content %>]]></Content>	
@@ -34,7 +34,7 @@ var tpl = heredoc(function(){/*
 		<ThumbMediaId><![CDATA[<%= content.thumbMediaId %>]]></ThumbMediaId>
 		</Music>
 	<% } else if (msgType === 'news') { %>
-		<ArticleCount><% content.length %></ArticleCount>
+		<ArticleCount><%= content.length %></ArticleCount>
 		<Articles>
 		<% content.forEach(function(item,index) { %>
 			<item>
@@ -48,8 +48,7 @@ var tpl = heredoc(function(){/*
 	<% } %>
 	</xml>
 */})
-
-
+console.log(ejs)
 var compile  = ejs.compile(tpl)
 
 exports = module.exports = {

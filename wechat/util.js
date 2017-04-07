@@ -1,6 +1,7 @@
 'use strict'
 var xml2js = require('xml2js')
 var Promise = require('bluebird')
+var tpl = require('./template')
 
 exports.parseXMLAsync = function(xml) {
 	return new Promise(function(resolve, reject) {
@@ -56,10 +57,11 @@ exports.tpl = function (content, message) {
 	type = content.type || type
 
 	info.content = content
-	info.createTime = new Data().getTime()
+	info.createTime = new Date().getTime()
 	info.msgType = type
 	info.toUserName = toUserName
 	info.fromUserName = fromUserName
+	console.log(tpl)
 
 	return tpl.compiled
 }

@@ -6,8 +6,8 @@ var getRawBody = require('raw-body')
 var util = require('./util')
 
 module.exports = function (options, handler) {
-	var wechat = new Wechat(options)
-	return function *(next) {
+	var wechat = new Wechat(options)	//用于获取accessToken
+	return function* (next) {
 		// console.log(this.query)
 		var that = this
 		var token = options.token
@@ -37,10 +37,9 @@ module.exports = function (options, handler) {
 			})
 			var content = yield util.parseXMLAsync(data)
 			var message = util.formatMessage(content.xml)
-			console.log(message)
 
 			this.weixin = message
-
+			console.log(handler)
 			yield handler.call(this, next)
 
 			wechat.reply.call(this)

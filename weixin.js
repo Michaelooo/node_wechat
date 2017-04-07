@@ -1,11 +1,10 @@
 //用于处理自动回复信息的处理逻辑
-
 'use strict'
-exports.reply = function * (next) {
+exports.reply = function* (next) {
+	console.log(this + " " + next)
 	var message = this.weixin
-
 	if (message.MsgType === 'event') {
-		if (message.Event === 'sunscribe') {
+		if (message.Event === 'subscribe') {
 			if (message.EventKey) {
 				console.log('通过二维码扫描'+ message.EventKey + ' ' + message.ticket)
 			}
@@ -23,7 +22,7 @@ exports.reply = function * (next) {
 			this.body = '你点击了菜单中的链接： '+ message.EventKey
 		}
 	} else if (message.MsgType === 'text') {
-		var content = message.content
+		var content = message.Content
 		var reply = '你说的' + message.Content + '我听不懂'
 
 		if (content === '1') {
