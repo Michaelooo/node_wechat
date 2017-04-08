@@ -1,5 +1,10 @@
 //用于处理自动回复信息的处理逻辑
 'use strict'
+
+var config = require('./config')
+var Wechat = require('./wechat/wechat')
+
+var wechatAPI = new Wechat(config.wechat)
 exports.reply = function* (next) {
 	var message = this.weixin
 	console.log(message)
@@ -48,6 +53,33 @@ exports.reply = function* (next) {
 				picUrl: '',
 				url: 'https://github.com/'
 			}]
+		} else if (content === '5') {
+			var data = yield wechatAPI.uploadMaterial('image', __dirname + '/2.jpg')
+
+			reply = {
+				type: 'image',
+				mediaId: data.media_id
+			}
+		} else if (content === '6') {
+			var data = yield wechatAPI.uploadMaterial('video', __dirname + '/2.mp4')
+
+			reply = {
+				type: 'video',
+				title: 'video',
+				description: 'none',
+				mediaId: data.media_id
+			}
+		} else if (content === '7') {
+			var data = yield wechatAPI.uploadMaterial('image', __dirname + '/2.jpg')
+
+			reply = {
+				type: 'music',
+				title: 'music',
+				description: 'relax',
+				musicUrl: '',
+				thumbMediaId: data.media_id,
+				mediaId: data.media_id
+			}
 		}
 		this.body = reply
 	}
