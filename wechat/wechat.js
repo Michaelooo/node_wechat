@@ -10,12 +10,24 @@ var prefix = 'https://api.weixin.qq.com/cgi-bin/'
 var api = {
 	accessToken: prefix + 'token?grant_type=client_credential', //获取access token
 	temp: {
-		upload: prefix + 'media/upload?' //新增临时素材
+		upload: prefix + 'media/upload?', //新增临时素材
+		dowload: prefix +　'media/get?' //获取临时素材
 	},
 	permanent: {
 		upload: prefix + 'material/add_material?', //新增其他类型永久素材
 		uploadNews: prefix + 'material/add_news', //新增永久图文素材
 		uploadNewsPic: prefix + 'material/uploadimg?', //上传图文消息内的图片获取URL 
+		dowload: prefix + 'material/get_material?',
+	},
+	message: {
+		sendByGroup: prefix + 'message/mass/sendall?',
+		sendByOpenId: prefix + 'message/mass/send?',
+		delete: prefix + 'message/mass/delete?'
+	},
+	menu: {
+		create: 'menu/create?',
+		get: 'menu/get?',
+		delete: 'menu/delete?',
 	}
 }
 
@@ -169,3 +181,116 @@ Wechat.prototype.uploadMaterial = function (type, material, permanent) {
 		})
 	})
 }
+
+Wechat.prototype.sendByGroup = function (type, message, groupId) {
+	var that = this
+
+	var msg = {
+		filter: {},
+		msgtype: type
+	}
+
+	msg[type] = message
+
+	if (!groupId) {
+		msg.filter.is_to_all = true
+	} else {
+		msg.filter = {
+			is_to_all: false,
+			tag_id: groupId
+		}
+	}
+
+	return new Promise(function(resolve, reject) {
+		that.fetchAccessToken().then(function(data) {
+			var url = api.message.sendByGroup + '&access_token=' + data.access_token
+
+			var options = {
+				method: 'POST', 
+				url: url,
+				body: msg,
+				json: true
+			}
+			
+			request(options).then(function(response) {
+				var _data = response.body
+				if(_data) {
+					resolve(_data)
+				} else {
+					throw new Error('upload failed')
+				}
+			}).catch(function(err){
+				reject(err)
+			})
+		})
+	})
+}
+
+Wechat.prototype.deleteMessage = function (msgId) {
+	var that = this
+
+	var msg = {
+		msg_id: msgId
+	}
+
+
+	return new Promise(function(resolve, reject) {
+		that.fetchAccessToken().then(function(data) {
+			var url = api.message.delete + '&access_token=' + data.access_token
+
+			var options = {
+				method: 'POST', 
+				url: url,
+				body: msg,
+				json: true
+			}
+			
+			request(options).then(function(response) {
+				var _data = response.body
+				if(_data) {
+					resolve(_data)
+				} else {
+					throw new Error('send failed')
+				}
+			}).catch(function(err){
+				reject(err)
+			})
+		})
+	})
+}
+
+Wechat.prototype.sendByOpenId = function (type, message, openId) {
+	var that = this
+
+	var msg = {
+		touser: openId,
+		msgtype: type,
+	}
+
+	msg[type] = message
+
+	return new Promise(function(resolve, reject) {
+		that.fetchAccessToken().then(function(data) {
+			var url = api.message.sendByOpenId + '&access_token=' + data.access_token
+
+			var options = {
+				method: 'POST', 
+				url: url,
+				body: msg,
+				json: true
+			}
+			
+			request(options).then(function(response) {
+				var _data = response.body
+				if(_data) {
+					resolve(_data)
+				} else {
+					throw new Error('send failed')
+				}
+			}).catch(function(err){
+				reject(err)
+			})
+		})
+	})
+}
+
